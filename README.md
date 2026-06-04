@@ -65,6 +65,18 @@ npm start              # serves everything on http://localhost:4000
 The database is created and seeded automatically on first run (default sub-teams
 Frontend/Backend/Design and locations Sri Lanka / Lithuania / Germany).
 
+### Sample data
+
+To load a worked **Q2 2026** example that reproduces the reference RICE board
+(Frontend 55 / Backend 57 / Design 26 capacity, with leftover 21.82% / 33.33% /
+38.46%), run:
+
+```bash
+npm run seed
+```
+
+This is safe to re-run — it resets only the "Q2 2026" quarter and its sample members.
+
 ### Configuration
 
 | Env var      | Default                  | Description                          |
