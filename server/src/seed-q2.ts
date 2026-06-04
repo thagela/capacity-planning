@@ -1,14 +1,24 @@
 /**
- * Seeds the "Q2 2026" quarter with data matching the reference RICE board sheet.
+ * Seeds the "Q2 2026" quarter with the real data from the reference RICE board
+ * (Topics sheet + Capacity planning sheet).
  *
- * The shared CSV (the Topics sheet) only contained the effort/capacity summary, not the
- * per-person capacity-planning inputs. The members below are illustrative placeholders
- * whose computed capacity reproduces the sheet's totals exactly:
+ * Capacity model from the sheet:
+ *   working days = 65 weekdays − public holidays
+ *   indexed capacity = (working days − vacation) × capacity index
  *
- *   Sub-team   Capacity   Planned effort   Leftover   Leftover %
- *   Frontend   55         43               12         21.82%
- *   Backend    57         38               19         33.33%
- *   Design     26         16 (10 + UX 6)   10         38.46%
+ * The sheet derives each capacity index from two factors:
+ *   - engineers:  0.6 (engineer factor) × 0.6 (focus factor) = 0.36
+ *   - UX (Designer A): 0.6 × 0.8                                  = 0.48
+ *   - Backend D:        0.6 × 0.1                                  = 0.06
+ *
+ * Locations: the sheet assumed 5 holidays for everyone. In reality Frontend C works from
+ * Sri Lanka, which has 7 weekday public holidays in Q2 2026, so the tool computes his
+ * capacity from 58 working days (the sheet used 60). Everyone else is in Berlin (60).
+ *
+ *   Sub-team   Capacity (tool)   Planned effort   Leftover
+ *   Frontend   ~54.7             43               ~11.7
+ *   Backend    57.36             38               19.36
+ *   Design/UX  26.4              16 (10 + UX 6)   10.4
  *
  * Run with:  npm run seed
  * Safe to re-run: it resets only the "Q2 2026" quarter and the named roster members.
@@ -38,23 +48,28 @@ function locationId(country: string, region: string | null): number {
 
 const FE = subteamId('Frontend');
 const BE = subteamId('Backend');
-const DS = subteamId('Design');
+const DS = subteamId('Design'); // the sheet's "UX" team maps to Design
 
 const DE = locationId('DE', 'BE'); // Germany (Berlin)
 const LK = locationId('LK', null); // Sri Lanka
-const LT = locationId('LT', null); // Lithuania
 
-// member, sub-team, location, capacity index, vacation days
+const ENGINEER = 0.36; // 0.6 × 0.6
+const UX = 0.48; //       0.6 × 0.8
+const PART_TIME = 0.06; //     0.6 × 0.1
+
+// name, sub-team, location, capacity index, vacation days
 const MEMBERS: Array<{ name: string; subteam: number; location: number; index: number; vacation: number }> = [
-  { name: 'Anika', subteam: FE, location: DE, index: 0.6, vacation: 5 },
-  { name: 'Bohan', subteam: FE, location: LK, index: 0.4, vacation: 3 },
-  { name: 'Carlos', subteam: BE, location: LT, index: 0.5, vacation: 2 },
-  { name: 'Dasha', subteam: BE, location: DE, index: 0.45, vacation: 0 },
-  { name: 'Elif', subteam: DS, location: DE, index: 0.3, vacation: 0 },
-  { name: 'Farah', subteam: DS, location: LK, index: 0.16, vacation: 8 },
+  { name: 'Frontend A', subteam: FE, location: DE, index: ENGINEER, vacation: 5 },
+  { name: 'Frontend B', subteam: FE, location: DE, index: ENGINEER, vacation: 12 },
+  { name: 'Frontend C', subteam: FE, location: LK, index: ENGINEER, vacation: 9 },
+  { name: 'Backend A', subteam: BE, location: DE, index: ENGINEER, vacation: 6 },
+  { name: 'Backend B', subteam: BE, location: DE, index: ENGINEER, vacation: 13 },
+  { name: 'Backend C', subteam: BE, location: DE, index: ENGINEER, vacation: 10 },
+  { name: 'Backend D', subteam: BE, location: DE, index: PART_TIME, vacation: 10 },
+  { name: 'Designer A', subteam: DS, location: DE, index: UX, vacation: 5 },
 ];
 
-// planned effort per sub-team (person-days), from the reference sheet
+// planned effort per sub-team (person-days), from the Topics sheet
 const EFFORTS: Array<{ subteam: number; planned: number }> = [
   { subteam: FE, planned: 43 },
   { subteam: BE, planned: 38 },

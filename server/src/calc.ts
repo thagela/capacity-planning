@@ -80,14 +80,16 @@ export function buildQuarterSummary(quarterId: number) {
       vacationDays: m.vacation_days,
       publicHolidays: holidayCount,
       grossWorkingDays: workingDays,
-      availableDaysBeforeIndex: round(afterVacation),
-      effectiveCapacity: round(effectiveCapacity),
+      availableDaysBeforeIndex: round(afterVacation, 2),
+      effectiveCapacity: round(effectiveCapacity, 2),
     };
   });
 
   // Aggregate per sub-team.
   const subteamResults = subteams.map((st) => {
     const stMembers = memberResults.filter((m) => m.subteamId === st.id);
+    // Sum the (2dp-rounded) member capacities so the sub-team total matches what the
+    // per-member rows visibly add up to.
     const capacity = stMembers.reduce((sum, m) => sum + m.effectiveCapacity, 0);
     const effort = effortBySubteam.get(st.id);
     const planned = effort?.planned_effort ?? 0;
@@ -110,18 +112,18 @@ export function buildQuarterSummary(quarterId: number) {
       name: st.name,
       color: st.color,
       memberCount: stMembers.length,
-      capacity: round(capacity),
-      plannedEffort: round(planned),
-      leftover: round(leftover),
-      leftoverPct: round(leftoverPct),
+      capacity: round(capacity, 2),
+      plannedEffort: round(planned, 2),
+      leftover: round(leftover, 2),
+      leftoverPct: round(leftoverPct, 2),
       retro,
     };
   });
 
   const totals = {
-    capacity: round(subteamResults.reduce((s, x) => s + x.capacity, 0)),
-    plannedEffort: round(subteamResults.reduce((s, x) => s + x.plannedEffort, 0)),
-    leftover: round(subteamResults.reduce((s, x) => s + x.leftover, 0)),
+    capacity: round(subteamResults.reduce((s, x) => s + x.capacity, 0), 2),
+    plannedEffort: round(subteamResults.reduce((s, x) => s + x.plannedEffort, 0), 2),
+    leftover: round(subteamResults.reduce((s, x) => s + x.leftover, 0), 2),
   };
 
   // Holiday calendars referenced by this quarter's members (for transparency in the UI).
