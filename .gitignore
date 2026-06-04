@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.tsbuildinfo
+*.log
+.DS_Store
+.env
+
+# Local data — the SQLite database file should not be committed
+data/
+*.sqlite
+*.sqlite-journal
+*.db
