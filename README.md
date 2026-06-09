@@ -84,13 +84,29 @@ This is safe to re-run — it resets only the "Q2 2026" quarter and its sample m
 | `PORT`       | `4000`                   | Server port                          |
 | `CP_DB_PATH` | `data/capacity.sqlite`   | Path to the SQLite database file     |
 
+## Navigation
+
+A left sidebar groups the app into **Plan** (Overview, Planning, Retrospective,
+History) and **Configure** (Quarters, Team, Settings):
+
+- **Overview** — the landing dashboard: total capacity, per-sub-team capacity bars
+  with inline planned-effort editing, leftover %, and an **Action items** panel that
+  flags over/under-committed sub-teams.
+- **Planning** — capacity *inputs*: members, vacations, capacity index, location, and
+  the public holidays applied per location.
+- **Retrospective** — planned vs. actual effort, surfaced on its own page (you don't
+  run it every quarter).
+- **History** — capacity/effort trends across quarters.
+- **Quarters / Team / Settings** — manage planning periods, the roster, and
+  sub-teams/locations.
+
 ## Typical workflow
 
 1. **Settings** — confirm your sub-teams and work locations.
-2. **Roster** — add your team members with their sub-team, location and capacity index.
+2. **Team** — add your members with their sub-team, location and capacity index.
 3. **Quarters** — create the quarter (dates default to the calendar quarter).
-4. **Capacity Planning** — *Import roster*, then set each person's vacation days.
-   Review available capacity by sub-team.
-5. **Effort & Leftover** — enter planned effort per sub-team; watch the leftover %.
-6. After the quarter, set its status to **completed** and record **actual effort**
-   on the same tab to run the retrospective.
+4. **Planning** — *Import roster*, then set each person's vacation days.
+5. **Overview** — enter planned effort per sub-team and watch leftover % and the
+   action items update live.
+6. After the quarter, mark it **completed** (Quarters) and record **actual effort**
+   in the **Retrospective**.
